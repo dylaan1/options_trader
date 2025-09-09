@@ -12,3 +12,4 @@ data/underliers/*
 sqlite/*
 !sqlite/.gitkeep
 
+__pycache__/
