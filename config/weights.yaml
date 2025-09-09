@@ -1,0 +1,58 @@
+# L1-normalized weights for Composite Score features
+# Feature order everywhere: [f_vb, f_doi, f_churn, f_iv, f_skew, f_liq, f_dte]
+# Convention: all features point positive for BUY-premium; SELL weights are set to bias S downward.
+
+meta:
+  feature_order: [f_vb, f_doi, f_churn, f_iv, f_skew, f_liq, f_dte]
+  note: "Weights are L1-normalized by row; sum of absolute values = 1"
+
+categories:
+
+  index_etf:
+    buy:  [0.20, 0.14, 0.06, 0.28, 0.14, 0.10, 0.08]
+    sell: [-0.04, -0.02, -0.02, 0.48, 0.18, 0.14, 0.12]
+
+  mega_cap:
+    buy:  [0.30, 0.22, 0.08, 0.18, 0.10, 0.08, 0.04]
+    sell: [-0.10, -0.06, -0.04, 0.36, 0.14, 0.18, 0.12]
+
+  mid_cap:
+    buy:  [0.26, 0.18, 0.06, 0.16, 0.06, 0.18, 0.10]
+    sell: [-0.08, -0.06, -0.04, 0.34, 0.10, 0.24, 0.14]
+
+  high_beta:
+    buy:  [0.34, 0.24, 0.10, 0.12, 0.10, 0.06, 0.04]
+    sell: [-0.14, -0.08, -0.06, 0.30, 0.16, 0.14, 0.12]
+
+  vix:
+    buy:  [0.12, 0.10, 0.06, 0.12, 0.20, 0.14, 0.26]
+    sell: [-0.06, -0.04, -0.04, 0.42, 0.10, 0.14, 0.20]
+
+  rates_commodities:
+    buy:  [0.22, 0.18, 0.06, 0.22, 0.12, 0.12, 0.08]
+    sell: [-0.06, -0.06, -0.04, 0.40, 0.16, 0.16, 0.12]
+
+ticker_category_map:
+  # Extend/modify as needed for your universe
+  SPY: index_etf
+  QQQ: index_etf
+  NDX: index_etf
+  SPX: index_etf
+
+  AAPL: mega_cap
+  MSFT: mega_cap
+  NVDA: mega_cap
+  GOOGL: mega_cap
+  AMZN: mega_cap
+
+  TSLA: high_beta
+  GME: high_beta
+  AMC: high_beta
+
+  GLD: rates_commodities
+  SLV: rates_commodities
+  USO: rates_commodities
+  TLT: rates_commodities
+
+  VIX: vix
+  VIXY: vix

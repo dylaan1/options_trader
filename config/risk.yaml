@@ -1,0 +1,109 @@
+# Global risk, gating, scaling, and execution parameters for the options simulator
+
+general:
+  dte_band: { min: 7, max: 35 }     # 1–5 weeks
+  rounding:
+    score_decimals: 3               # UI/reporting only; keep full precision internally
+  epsilon: 1.0e-9
+
+trade_gates:
+  thresholds:
+    no_trade: 0.15
+    soft: 0.40
+    strong: 0.70
+  event_filter:
+    tighten_by: 0.10                # add to all gates around earnings/CPI/FOMC if enabled
+    enabled: false
+
+features:
+  # Robust scaling → [-1, +1]
+  robust:
+    flow_window: 60                 # vb, dOI, churn, spread_inv
+    skew_window: 252
+    ivr_window: 252
+    winsor_K: 3.0                   # winsorize z to [-K, K]
+    squash: tanh                    # apply tanh(z/K)
+  construction:
+    vol_avg_window: 20
+    skew_delta_bucket: 0.25         # use 25Δ puts/calls for skew
+    spread_metric: "pct"            # (ask - bid)/(mid + eps)
+  dte_kernel:
+    type: triangular                # peak around the middle of [min,max]
+    center_dte: 21                  # near 3 weeks
+    floor_outside_band: -1.0        # f_dte tends toward -1 outside [7,35]
+  directional_gate:
+    default: 0                      # 0 neutral; +1 bullish; -1 bearish unless overridden by strategy
+
+liquidity_prefilters:
+  oi_min: 500
+  vol_min: 50
+  spread_max_pct: 0.10              # skip if spread% > 10%
+  enforce_dte_band: true
+
+fees_slippage:
+  per_contract_fee: 0.75
+  fill_model:
+    mode: mid_pm                    # price = mid ± half_spread*(ask-bid); sign by side
+    half_spread: 0.50               # 50% of bid-ask traversed on average
+
+position_caps:
+  frac_of_open_interest: 0.02       # n ≤ 2% of OI
+  frac_of_day_volume: 0.05          # n ≤ 5% of today's contract volume
+  max_positions: 12                 # portfolio-wide concurrent positions
+  per_ticker_fraction_of_port_risk: 0.33
+  sector_theme_fraction_of_port_risk: 0.50
+
+portfolio_caps:
+  active_risk_max: 0.15             # total active risk (sum of per-trade max losses) ≤ 15% of equity
+  greek_limits:
+    use_greeks: false               # set true if you have vega/delta per leg
+    max_abs_vega_per_1vol: 0.005    # as fraction of equity (example if enabled)
+    max_net_delta_per_ticker: 0.20   # as fraction of underlier notional (example if enabled)
+
+category_multipliers:
+  index_etf: 1.0
+  mega_cap: 1.1
+  mid_cap: 0.8
+  high_beta: 0.7
+  vix: 0.9
+  rates_commodities: 0.9
+
+risk_bands_per_category:
+  # Per-trade risk as a fraction of equity before liquidity factor L
+  index_etf:        { rmin: 0.005, rmax: 0.015 }
+  mega_cap:         { rmin: 0.005, rmax: 0.020 }
+  mid_cap:          { rmin: 0.005, rmax: 0.015 }
+  high_beta:        { rmin: 0.0025, rmax: 0.025 }   # cap to 0.015 unless conviction
+  vix:              { rmin: 0.005, rmax: 0.015 }
+  rates_commodities:{ rmin: 0.005, rmax: 0.015 }
+
+score_to_risk:
+  ramp:
+    low: 0.15                       # below = 0 risk
+    high: 0.70                      # at/above = full risk (g=1)
+    exponent: 1.6                   # convexity of the ramp
+  liquidity_factor:
+    # L = 0.5 + 0.5 * (f_liq + 1)/2 ∈ [0.5, 1.0]
+    min: 0.5
+    max: 1.0
+
+exits:
+  time_stop_dte: 5                  # close when DTE ≤ 5
+  long_premium:
+    profit_take_fraction: [0.50, 1.00]   # scale/exit between +50% and +100%
+    stop_loss_fraction:  [0.40, 0.60]    # cut if -40% to -60% lost; choose per category
+  credit_spreads:
+    profit_take_of_max: [0.50, 0.70]     # close when 50–70% of max profit captured
+    stop_loss_of_max: 0.50               # cut at -50% of max loss
+  score_reversion:
+    reduce_if_abs_S_below_no_trade_for_bars: 2
+    exit_if_flip_opposite_soft: 0.25     # if score flips sign and ≥ 0.25 on opposite side
+
+data_timing:
+  open_interest_lag_bars: 1          # enforce T+1 OI usage
+  missing_feature_policy: neutral    # treat missing feature as 0 (neutral) and flag for audit
+
+reporting:
+  save_topN_signals_per_bar: 50
+  store_all_signals: false
+
