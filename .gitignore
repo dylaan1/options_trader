@@ -1,1 +1,15 @@
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Data files
+data/chains/*
+!data/chains/.gitkeep
+data/underliers/*
+!data/underliers/.gitkeep
+
+# SQLite databases
+sqlite/*
+!sqlite/.gitkeep
+
 __pycache__/
