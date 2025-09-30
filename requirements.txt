@@ -2,4 +2,5 @@ numpy
 pandas
 PyYAML
 scipy
+requests
 
