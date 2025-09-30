@@ -41,6 +41,16 @@ This document outlines the major workstreams required to deliver the Monte Carlo
 - Normalise option metadata (maturity, strike conventions, contract multipliers).
 - Create configuration schema linking data sources to model parameters.
 
+**Decisions Confirmed:**
+- Market data provider: Schwab Developer API for volatility, rates, dividends, quotes, and account balances.
+- Calibration cadence: daily at 23:50 Pacific Time using the latest available data.
+- Missing data handling: persist `null` values with explicit missing-field flags and retry via dedicated refetch logic.
+
+**Info Needed From You:**
+1. Any additional symbols/universes beyond the primary calibration underlier?
+2. Credentials rotation policy or token refresh workflow for the Schwab API?
+3. Storage format for calibrated parameters (e.g., SQLite schema, JSON documents, cloud store object keys) so the persistence layer can be aligned with your operational preferences.
+
 **Info Needed From You:**
 1. Data providers/API endpoints for vol, rates, dividends?
 2. Calibration frequency (intraday, daily)?
