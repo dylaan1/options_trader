@@ -50,6 +50,13 @@ This document outlines the major workstreams required to deliver the Monte Carlo
 **Info Needed From You:**
 1. Any additional symbols/universes beyond the primary calibration underlier?
 2. Credentials rotation policy or token refresh workflow for the Schwab API?
+3. Storage format for calibrated parameters (e.g., SQLite schema, JSON documents, cloud store object keys) so the persistence layer can be aligned with your operational preferences.
+
+**Info Needed From You:**
+1. Data providers/API endpoints for vol, rates, dividends?
+2. Calibration frequency (intraday, daily)?
+3. Preferred fallback rules when data is missing?
+4. Storage format for calibrated parameters?
 
 ---
 
@@ -69,6 +76,11 @@ This document outlines the major workstreams required to deliver the Monte Carlo
 
 **Outstanding Info Needed From You:**
 1. Historical periods or instruments to prioritise for benchmark comparisons?
+
+**Info Needed From You:**
+1. Acceptable pricing error tolerance (absolute/relative)?
+2. Historical periods or instruments to prioritise?
+3. Testing cadence (on commit, nightly)?
 
 ---
 
