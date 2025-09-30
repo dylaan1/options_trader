@@ -69,6 +69,14 @@ This document outlines the major workstreams required to deliver the Monte Carlo
 - Include scenario backtests using historical market regimes.
 - Automate regression tests in CI or scheduled jobs.
 
+**Decisions Confirmed:**
+- Pricing tolerance defaults to an absolute error check (e.g., \$0.05) with an internal switch to relative tolerance when required for deep in/out-of-the-money contracts.
+- Validation universe prioritises SPX, SPY, NDX, QQQ, TSLA, AAPL, GOOGL, META, PLTR, ORCL and supplements with the 50 instruments exhibiting the largest absolute fair-value deviations each run.
+- Regression harness will run three times per trading day at 06:45, 12:00, and 15:30 Pacific Time, with an optional recommendation to add 10:30 and 16:15 Pacific sweeps for heightened market regimes.
+
+**Outstanding Info Needed From You:**
+1. Historical periods or instruments to prioritise for benchmark comparisons?
+
 **Info Needed From You:**
 1. Acceptable pricing error tolerance (absolute/relative)?
 2. Historical periods or instruments to prioritise?
