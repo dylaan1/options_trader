@@ -45,6 +45,7 @@ This document outlines the major workstreams required to deliver the Monte Carlo
 - Market data provider: Schwab Developer API for volatility, rates, dividends, quotes, and account balances.
 - Calibration cadence: daily at 23:50 Pacific Time using the latest available data.
 - Missing data handling: persist `null` values with explicit missing-field flags and retry via dedicated refetch logic.
+- Calibrated-parameter storage: JSON files persisted by the calibration engine's `JsonCalibrationStore`.
 
 **Info Needed From You:**
 1. Any additional symbols/universes beyond the primary calibration underlier?
